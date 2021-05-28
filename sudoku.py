@@ -12,6 +12,10 @@ process for creating the board:
 3. check if grid w/ numbers taken out has only 1 solution
 """
 
+#takes a partially filled board w/ blank spaces and
+def solvBoard(board):
+    return
+
 def printBoard(board):
     print("\t | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |")
     print("\t " + "-"*37)
@@ -20,19 +24,27 @@ def printBoard(board):
         for j in range(0, 9):
             print(" " + str(board[i][j]) + " |", end='')
         print("")
+
 def makeBoard():
-    board = np.zeros((9,9), dtype=int)
-    #make a random set of seed values to start the board off
-    for i in range(1, 10):
-        x = random.randint(0, 8)
-        y = random.randint(0, 8)
-        board[x][y] = i
+    board = np.zeros((9,9), dtype="int")
+
+    #fill in one 3x3 grid first
+    #seed value
+    seed = random.sample(range(1, 10), 9)
+    x = 0
+    #put each seed value into the 3x3 grid
+    for i in range(0, 3):
+        for j in range(0, 3):
+            board[i][j] = seed[x]
+            x+=1
     printBoard(board)
+    #recursively generate a full board from this seed
+    #solvBoard(board)
 
 def printMenu():
-	print("="*16)
-	print("Welcome to SUDOKU")
-	print("="*16)
-	board = makeBoard()
+    print("\t\t" + "="*24)
+    print("\t\t   Welcome to SUDOKU")
+    print("\t\t" + "="*24)
+    board = makeBoard()
 
 printMenu()
