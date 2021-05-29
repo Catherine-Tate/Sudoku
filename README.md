@@ -1,2 +1,2 @@
 # Sudoku
-A Sudoku game made in python
+A Sudoku game made in python 3
