@@ -16,6 +16,39 @@ process for creating the board:
 generate the first 3x3 square of the puzzle
 """
 
+def lCol(board):
+    base = {1, 2, 3, 4, 5, 6, 7, 8, 9}
+    for i in range(0, 3):
+        base = base - set({board[i][0]})
+    print(base)
+    lColNums = list(base)
+    random.shuffle(lColNums)
+    for i in range(0, 6):
+        board[i+3][0] = lColNums[i]
+    return(board)
+
+#fill in the last box based on the first 6 numbers in each filled row
+def boxThree(board):
+    base = {1, 2, 3, 4, 5, 6, 7, 8, 9}
+    R1N = base - set(board[0][:6])
+    R2N = base - set(board[1][:6])
+    R3N = base - set(board[2][:6])
+
+    R1N = list(R1N)
+    R2N = list(R2N)
+    R3N = list(R3N)
+
+    random.shuffle(R1N)
+    random.shuffle(R2N)
+    random.shuffle(R3N)
+
+    for i in range(0, 3):
+        board[0][6+i] = R1N[i]
+        board[1][6+i] = R2N[i]
+        board[2][6+i] = R3N[i]
+
+    return(board)
+
 def boxTwo(board, seed):
     #fill in the first column of the second box
     random.shuffle(seed)
@@ -25,7 +58,7 @@ def boxTwo(board, seed):
     #possible values fo rows 2 and 3 in box 2
     R2I = list((set(board[0][:3]).union(set(board[2][:3]))) - set(board[0][3:6]))
     R3I = (set(board[0][:3]).union(set(board[1][:3]))) - set(board[0][3:6])
-    print(R2I, R3I)
+    #print(R2I, R3I)
 
     #choose a set of values for row 2 that leaves enough values for row 3
     while(1):
@@ -59,7 +92,7 @@ def boxOne(seed):
     return(board)
 
 #takes a partially filled board w/ blank spaces and
-def solvBoard(board):
+def solveBoard(board):
     return
 
 def printBoard(board):
@@ -87,15 +120,17 @@ def makeBoard():
 
     #potential numbers for box 2 row 1
     seed2 = seed[3:]
+
+    #fill in the 2nd box
     board = boxTwo(board, seed2)
+
+    #fill in the third box
+    board = boxThree(board)
+
+    board = lCol(board)
+
     printBoard(board)
 
-    #fill in the next two 3x3 squares
-
-
-    #recursively generate a full board from this seed
-
-    #solvBoard(board)
 
 def printMenu():
     print("\t\t" + "="*24)
