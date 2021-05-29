@@ -16,11 +16,12 @@ process for creating the board:
 generate the first 3x3 square of the puzzle
 """
 
+#fill in the leftmost column
 def lCol(board):
     base = {1, 2, 3, 4, 5, 6, 7, 8, 9}
     for i in range(0, 3):
         base = base - set({board[i][0]})
-    print(base)
+    #print(base)
     lColNums = list(base)
     random.shuffle(lColNums)
     for i in range(0, 6):
