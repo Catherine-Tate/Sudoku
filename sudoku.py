@@ -28,11 +28,12 @@ def gridFill(board, notes):
             #dont count filled in squares
             if((len(notes[i][j]) < len(notes[row][col])) and board[i][j] == 0):
                 row, col = i,j
-    #no possible numbers for any square
+    #no possible numbers for any square, board is complete
     if(tot == 0):
         return(board, 0)
 
     spot = list(notes[row][col])
+    #the function got stuck, restart and try again
     if(len(spot) == 0):
         return(board, 1)
     rand = random.randrange(0, len(spot))
@@ -188,6 +189,7 @@ def makeBoard():
 
     notes = makeNotes(board)
     x = 1
+    #band-aid fix to make sure the generation always makes a completed board
     while(x == 1):
         board, x = gridFill(board, notes)
     #print(notes)
