@@ -17,12 +17,13 @@ process for creating the board:
 #filled squares have no value in their notes section
 def gridFill(board, notes):
     #find the square with the fewest possible numbers
-    min = 0
-    for i in range(0,81):
-        if(len(notes[i] < len(notes[min]))):
-            min = i
-    row = min/9
-    col = min%9
+    min = [0,0]
+    for i in range(0,9):
+        for j in range(0, 9):
+            if(len(notes[i][j]) < len(notes[min[0]][min[1]])):
+                min = i,j
+    row =  min[0]
+    col = min[1]
     #for i in range(0, len(notes[min])):
 
 
@@ -36,7 +37,9 @@ def makeNotes(board):
         notes.append(rowNotes)
     #remove numbers as possibilities from the notes
     for i in range(0, 9):
+        xbox = (int(i/3))*3
         for j in range(0, 9):
+            ybox = (int(j/3))*3
             #if a square is filled:
             if(board[i][j] != 0):
                 #remove the notes for that square
@@ -45,8 +48,12 @@ def makeNotes(board):
                 for k in range(0, 9):
                     notes[k][j] -= {board[i][j]}
                     notes[i][k] -= {board[i][j]}
-                row = i%3
-                col = j%3
+                for k in range(xbox, xbox+3):
+                    for l in range(ybox, ybox+3):
+                        #print(notes[k][k])
+                        notes[k][l] -= {board[i][j]}
+                        #print(notes[k][l])
+    return(notes)
 
 #fill in the leftmost column
 def lCol(board):
@@ -164,7 +171,7 @@ def makeBoard():
     board = lCol(board)
 
     notes = makeNotes(board)
-    board = gridfill(board, notes)
+    board = gridFill(board, notes)
 
     printBoard(board)
 
