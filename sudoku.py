@@ -17,14 +17,30 @@ process for creating the board:
 #filled squares have no value in their notes section
 def gridFill(board, notes):
     #find the square with the fewest possible numbers
-    min = [0,0]
+    row = 0
+    col = 0
+    tot = 0
     for i in range(0,9):
         for j in range(0, 9):
-            if(len(notes[i][j]) < len(notes[min[0]][min[1]])):
-                min = i,j
-    row =  min[0]
-    col = min[1]
-    #for i in range(0, len(notes[min])):
+            tot += len(notes[i][j])
+            if(board[i][j] == 0 and board[row][col] != 0):
+                row, col = i,j
+            #dont count filled in squares
+            if((len(notes[i][j]) < len(notes[row][col])) and board[i][j] == 0):
+                row, col = i,j
+    #no possible numbers for any square
+    if(tot == 0):
+        return(board, 0)
+
+    spot = list(notes[row][col])
+    if(len(spot) == 0):
+        return(board, 1)
+    rand = random.randrange(0, len(spot))
+
+    newBoard = board
+    newBoard[row][col] = spot[rand]
+    newNotes = makeNotes(newBoard)
+    return(gridFill(newBoard, newNotes))
 
 
 def makeNotes(board):
@@ -37,6 +53,7 @@ def makeNotes(board):
         notes.append(rowNotes)
     #remove numbers as possibilities from the notes
     for i in range(0, 9):
+        #xbox and ybox are used for tracking which 3x3 square the index falls under
         xbox = (int(i/3))*3
         for j in range(0, 9):
             ybox = (int(j/3))*3
@@ -44,15 +61,14 @@ def makeNotes(board):
             if(board[i][j] != 0):
                 #remove the notes for that square
                 notes[i][j].clear()
-                #remove that number from the notes of all related squares (row, column, 3x3)
+                #remove that number from the notes of all indices in the same row/column
                 for k in range(0, 9):
                     notes[k][j] -= {board[i][j]}
                     notes[i][k] -= {board[i][j]}
+                #remove that number from the notes of all indices in the same 3x3 square
                 for k in range(xbox, xbox+3):
                     for l in range(ybox, ybox+3):
-                        #print(notes[k][k])
                         notes[k][l] -= {board[i][j]}
-                        #print(notes[k][l])
     return(notes)
 
 #fill in the leftmost column
@@ -171,8 +187,10 @@ def makeBoard():
     board = lCol(board)
 
     notes = makeNotes(board)
-    board = gridFill(board, notes)
-
+    x = 1
+    while(x == 1):
+        board, x = gridFill(board, notes)
+    #print(notes)
     printBoard(board)
 
 
