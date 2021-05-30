@@ -36,12 +36,13 @@ def gridFill(board, notes):
     #the function got stuck, restart and try again
     if(len(spot) == 0):
         return(board, 1)
-    rand = random.randrange(0, len(spot))
 
-    newBoard = board
-    newBoard[row][col] = spot[rand]
-    newNotes = makeNotes(newBoard)
-    return(gridFill(newBoard, newNotes))
+    random.shuffle(spot)
+    for i in range(0, len(spot)):
+        newBoard = board
+        newBoard[row][col] = spot[i]
+        newNotes = makeNotes(newBoard)
+        return(gridFill(newBoard, newNotes))
 
 
 def makeNotes(board):
