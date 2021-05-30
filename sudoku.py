@@ -12,9 +12,41 @@ process for creating the board:
 3. check if grid w/ numbers taken out has only 1 solution
 """
 
-"""
-generate the first 3x3 square of the puzzle
-"""
+#recursive function to build the rest of the board from a given board.
+#also takes a set of "notes" which are possible numbers for each square.
+#filled squares have no value in their notes section
+def gridFill(board, notes):
+    #find the square with the fewest possible numbers
+    min = 0
+    for i in range(0,81):
+        if(len(notes[i] < len(notes[min]))):
+            min = i
+    row = min/9
+    col = min%9
+    #for i in range(0, len(notes[min])):
+
+
+def makeNotes(board):
+    #start with each number being possible for each square
+    notes = []
+    for i in range(0, 9):
+        rowNotes = []
+        for j in range(0, 9):
+            rowNotes.append({1, 2, 3, 4, 5, 6, 7, 8, 9})
+        notes.append(rowNotes)
+    #remove numbers as possibilities from the notes
+    for i in range(0, 9):
+        for j in range(0, 9):
+            #if a square is filled:
+            if(board[i][j] != 0):
+                #remove the notes for that square
+                notes[i][j].clear()
+                #remove that number from the notes of all related squares (row, column, 3x3)
+                for k in range(0, 9):
+                    notes[k][j] -= {board[i][j]}
+                    notes[i][k] -= {board[i][j]}
+                row = i%3
+                col = j%3
 
 #fill in the leftmost column
 def lCol(board):
@@ -81,6 +113,7 @@ def boxTwo(board, seed):
 
     return(board)
 
+#Generate numbers 1-9 in a random order to fill the first 3x3 box
 def boxOne(seed):
     board = np.zeros((9,9), dtype="int")
     #fill in one 3x3 grid first
@@ -129,6 +162,9 @@ def makeBoard():
     board = boxThree(board)
 
     board = lCol(board)
+
+    notes = makeNotes(board)
+    board = gridfill(board, notes)
 
     printBoard(board)
 
