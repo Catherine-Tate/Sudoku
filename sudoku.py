@@ -24,6 +24,7 @@ def makePuzzle(board):
     puzzle = np.copy(board)
     print(puzzle)
     tries = 3
+    #still tweaking how many squares to remove/when to stop removing squares
     while(removed < 50):
         count = 0
 
