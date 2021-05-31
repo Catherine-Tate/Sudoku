@@ -16,25 +16,40 @@ process for creating the board:
 #turn a filled grid into a puzzle by removing some number of spots
 def makePuzzle(board):
     global count
+
+    #choose how many squares to remove at random
     numRem = random.randrange(55, (81-17))
     removed = 0
-    while(removed < numRem):
+
+    puzzle = np.copy(board)
+    print(puzzle)
+    tries = 3
+    while(removed < 50):
         count = 0
+
+        #pick a square at random
         row = random.randrange(9)
         col = random.randrange(9)
-        while(board[row][col] == 0):
+        while(puzzle[row][col] == 0):
             row = random.randrange(9)
             col = random.randrange(9)
-        save = board[row][col]
-        board[row][col] = 0
-        copyBoard = board
+
+        #save the value there in case we need it again
+        save = puzzle[row][col]
+        puzzle[row][col] = 0
+        #print(board)
+        print(puzzle)
+
+        copyBoard = np.copy(puzzle)
         solveGrid(copyBoard)
-        print(count)
-        if(count != 1):
-            board[row][col] = save
+        #print(count)
+        if(count > 1):
+            print("puzzle doesnt have unique solution")
+            puzzle[row][col] = save
+            tries -= 1
         else:
             removed += 1
-    return(board)
+    return(puzzle)
 
 def validateBoard(board):
     for i in range(0, 9):
@@ -49,7 +64,11 @@ def validateBoard(board):
 #function for checking if the board has multiple solutions
 def solveGrid(board):
     global count
+
+    if(count > 1): return(True)
     notes = makeNotes(board)
+
+    #print(board)
 
     #check if board is full
     if(validateBoard(board)):
@@ -66,10 +85,11 @@ def solveGrid(board):
 
     spot = list(notes[i][j])
     random.shuffle(spot)
+    #print(spot)
 
     for num in spot:
         board[i][j] = num
-        if(gridFill(board)[0]):
+        if(solveGrid(board)):
             return(True)
         board[i][j] = 0
     return(False)
