@@ -4,6 +4,7 @@ import random
 
 #written by Catherine Tate in python 3
 
+count = 0
 
 """
 process for creating the board:
@@ -12,70 +13,93 @@ process for creating the board:
 3. check if grid w/ numbers taken out has only 1 solution
 """
 
-#function for checking if the board has multiple solutions
-def solveGrid(board, count):
-    notes = makeNotes(board)
-    row = 0
-    col = 0
-    tot = 0
-    for i in range(0,9):
+#turn a filled grid into a puzzle by removing some number of spots
+def makePuzzle(board):
+    global count
+    numRem = random.randrange(55, (81-17))
+    removed = 0
+    while(removed < numRem):
+        count = 0
+        row = random.randrange(9)
+        col = random.randrange(9)
+        while(board[row][col] == 0):
+            row = random.randrange(9)
+            col = random.randrange(9)
+        save = board[row][col]
+        board[row][col] = 0
+        copyBoard = board
+        solveGrid(copyBoard)
+        print(count)
+        if(count != 1):
+            board[row][col] = save
+        else:
+            removed += 1
+    return(board)
+
+def validateBoard(board):
+    for i in range(0, 9):
         for j in range(0, 9):
-            tot += len(notes[i][j])
-            if(board[i][j] == 0 and board[row][col] != 0):
-                row, col = i,j
-            #dont count filled in squares
-            if((len(notes[i][j]) < len(notes[row][col])) and board[i][j] == 0):
-                row, col = i,j
+            if(board[i][j] == 0):
+                return(False)
+    return(True)
 
-    #no possible numbers for any square, board is complete
-    if(tot == 0):
-        count+=1
-        return(count)
 
-    spot = list(notes[row][col])
-    #the function got stuck, restart and try again
-    if(len(spot) == 0):
-        return(count)
 
+
+#function for checking if the board has multiple solutions
+def solveGrid(board):
+    global count
+    notes = makeNotes(board)
+
+    #check if board is full
+    if(validateBoard(board)):
+        count += 1
+        return(True)
+
+    #get first empty square
+    for i in range(0, 9):
+        for j in range(0, 9):
+            if(board[i][j] == 0):
+                break
+        if(board[i][j] == 0):
+            break
+
+    spot = list(notes[i][j])
     random.shuffle(spot)
-    for i in range(0, len(spot)):
-        newBoard = board
-        newBoard[row][col] = spot[i]
-        return(solveGrid(newBoard))
+
+    for num in spot:
+        board[i][j] = num
+        if(gridFill(board)[0]):
+            return(True)
+        board[i][j] = 0
+    return(False)
 
 #recursive function to build the rest of the board from a given board.
-#also takes a set of "notes" which are possible numbers for each square.
-#filled squares have no value in their notes section
-def gridFill(board, notes):
-    #print("\n")
-    #printBoard(board)
-    #find the square with the fewest possible numbers
-    row = 0
-    col = 0
-    tot = 0
-    for i in range(0,9):
+def gridFill(board):
+    notes = makeNotes(board)
+
+    #check if board is full
+    if(validateBoard(board)):
+        return(True, board)
+
+    #get first empty square
+    for i in range(0, 9):
         for j in range(0, 9):
-            tot += len(notes[i][j])
-            if(board[i][j] == 0 and board[row][col] != 0):
-                row, col = i,j
-            #dont count filled in squares
-            if((len(notes[i][j]) < len(notes[row][col])) and board[i][j] == 0):
-                row, col = i,j
-    #no possible numbers for any square, board is complete
-    if(tot == 0):
-        return(board, 0)
+            if(board[i][j] == 0):
+                break
+        if(board[i][j] == 0):
+            break
 
-    spot = list(notes[row][col])
-    #the function got stuck, restart and try again
-    if(len(spot) == 0):
-        return(board, 1)
-
+    spot = list(notes[i][j])
     random.shuffle(spot)
-    for i in range(0, len(spot)):
-        newBoard = board
-        newBoard[row][col] = spot[i]
-        newNotes = makeNotes(newBoard)
-        return(gridFill(newBoard, newNotes))
+
+    for num in spot:
+        board[i][j] = num
+        if(gridFill(board)[0]):
+            return(True, board)
+        board[i][j] = 0
+    return(False, board)
+
 
 def makeNotes(board):
     #start with each number being possible for each square
@@ -221,10 +245,11 @@ def makeBoard():
     board = lCol(board)
 
     notes = makeNotes(board)
-    x = 1
-    #band-aid fix to make sure the generation always makes a completed board
-    while(x == 1):
-        board, x = gridFill(board, notes)
+    filled, board = gridFill(board)
+
+    solution = board
+
+    board = makePuzzle(board)
     #print(notes)
 
     # next, remove numbers at random from the board
