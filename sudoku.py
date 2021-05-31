@@ -12,10 +12,43 @@ process for creating the board:
 3. check if grid w/ numbers taken out has only 1 solution
 """
 
+#function for checking if the board has multiple solutions
+def solveGrid(board, count):
+    notes = makeNotes(board)
+    row = 0
+    col = 0
+    tot = 0
+    for i in range(0,9):
+        for j in range(0, 9):
+            tot += len(notes[i][j])
+            if(board[i][j] == 0 and board[row][col] != 0):
+                row, col = i,j
+            #dont count filled in squares
+            if((len(notes[i][j]) < len(notes[row][col])) and board[i][j] == 0):
+                row, col = i,j
+
+    #no possible numbers for any square, board is complete
+    if(tot == 0):
+        count+=1
+        return(count)
+
+    spot = list(notes[row][col])
+    #the function got stuck, restart and try again
+    if(len(spot) == 0):
+        return(count)
+
+    random.shuffle(spot)
+    for i in range(0, len(spot)):
+        newBoard = board
+        newBoard[row][col] = spot[i]
+        return(solveGrid(newBoard))
+
 #recursive function to build the rest of the board from a given board.
 #also takes a set of "notes" which are possible numbers for each square.
 #filled squares have no value in their notes section
 def gridFill(board, notes):
+    #print("\n")
+    #printBoard(board)
     #find the square with the fewest possible numbers
     row = 0
     col = 0
@@ -43,7 +76,6 @@ def gridFill(board, notes):
         newBoard[row][col] = spot[i]
         newNotes = makeNotes(newBoard)
         return(gridFill(newBoard, newNotes))
-
 
 def makeNotes(board):
     #start with each number being possible for each square
@@ -194,6 +226,10 @@ def makeBoard():
     while(x == 1):
         board, x = gridFill(board, notes)
     #print(notes)
+
+    # next, remove numbers at random from the board
+    # resulting "problems" must have only 1 unique solution
+
     printBoard(board)
 
 
