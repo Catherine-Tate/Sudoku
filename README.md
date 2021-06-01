@@ -3,6 +3,7 @@ A Sudoku game made in python 3
 
 to run: 
     cd to the folder containing "sudoku.py"
+    run "pip3 install -r requirements.txt"
     run "python3 sudoku.py"* in the consol
     Enter the name of a valid sudoku puzzle file to be solved.
         a valid sudoku file is a 9x9 grid consisting of numbers and 
