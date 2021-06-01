@@ -8,6 +8,15 @@ from time import sleep
 count = 0
 
 """
+#how the user interacts with the puzzle
+def takeComs():
+    print("Select an option:")
+    print("0. Place Letter")
+    print("1. Make Note")
+    print("2. Check Notes")
+    print("2. ")
+
+
 process for creating the board:
 1. generate filled grid
 2. remove some #s (more/less for different difficulties?)
@@ -237,7 +246,10 @@ def printBoard(board):
             print("\t " + "-"*39)
         print("\t" + str(i) + "[", end = "")
         for j in range(0, 9):
-            print(" " + str(board[i][j]), end='')
+            if(board[i][j] != 0):
+                print(" " + str(board[i][j]), end='')
+            else:
+                print("  ", end = '')
             if((j+1)%3 == 0):
                 print(" ]", end='')
                 if(j != 8): print("[", end='')
@@ -276,12 +288,23 @@ def makeBoard():
     # resulting "problems" must have only 1 unique solution
 
     printBoard(board)
-    return(board)
+    return(board, solution)
 
 def printMenu():
     print("\t\t" + "="*24)
     print("\t\t   Welcome to SUDOKU")
     print("\t\t" + "="*24)
-    board = makeBoard()
+    #print("\n[Preparing Board]")
+    #board, solution = makeBoard()
+
+    fileName = input("Please enter filename of puzzle: ")
+
+    try:
+        puzzleFile = open(fileName, "r")
+    except IOError:
+        print("File not found")
+
+
+    #takeComs()
 
 printMenu()
