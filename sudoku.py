@@ -308,11 +308,11 @@ def printMenu():
 
     puzzle = []
     lines = puzzleFile.readlines()
-    print(lines)
+    #print(lines)
     for i in range(len(lines)):
         line = lines[i].strip("\n")
         row = []
-        print(line)
+        #print(line)
         for j in range(len(line)):
             if(line[j] == "X"):
                 row.append(0)
