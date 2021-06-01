@@ -7,6 +7,7 @@ from time import sleep
 
 count = 0
 
+
 """
 #how the user interacts with the puzzle
 def takeComs():
@@ -303,8 +304,32 @@ def printMenu():
         puzzleFile = open(fileName, "r")
     except IOError:
         print("File not found")
+        return
 
+    puzzle = []
+    lines = puzzleFile.readlines()
+    print(lines)
+    for i in range(len(lines)):
+        line = lines[i].strip("\n")
+        row = []
+        print(line)
+        for j in range(len(line)):
+            if(line[j] == "X"):
+                row.append(0)
+            else:
+                row.append(int(line[j]))
+        puzzle.append(row)
+    printBoard(puzzle)
 
-    #takeComs()
+    x, solution = gridFill(puzzle)
+    printBoard(solution)
+
+    solFileName = fileName.split(".")[0] + ".src.txt"
+
+    solFile = open(solFileName, "w")
+    for i in range(len(solution)):
+        for j in range(len(solution[i])):
+            solFile.write(str(solution[i][j]))
+        solFile.write("\n")
 
 printMenu()
