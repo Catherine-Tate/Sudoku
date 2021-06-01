@@ -1,6 +1,7 @@
 #sudoku game
 import numpy as np
 import random
+from time import sleep
 
 #written by Catherine Tate in python 3
 
@@ -22,7 +23,7 @@ def makePuzzle(board):
     removed = 0
 
     puzzle = np.copy(board)
-    print(puzzle)
+    #print(puzzle)
     tries = 3
     #still tweaking how many squares to remove/when to stop removing squares
     while(removed < 50):
@@ -38,8 +39,6 @@ def makePuzzle(board):
         #save the value there in case we need it again
         save = puzzle[row][col]
         puzzle[row][col] = 0
-        #print(board)
-        print(puzzle)
 
         copyBoard = np.copy(puzzle)
         solveGrid(copyBoard)
@@ -268,7 +267,7 @@ def makeBoard():
     notes = makeNotes(board)
     filled, board = gridFill(board)
 
-    solution = board
+    solution = np.copy(board)
 
     board = makePuzzle(board)
     #print(notes)
@@ -277,7 +276,7 @@ def makeBoard():
     # resulting "problems" must have only 1 unique solution
 
     printBoard(board)
-
+    return(board)
 
 def printMenu():
     print("\t\t" + "="*24)
