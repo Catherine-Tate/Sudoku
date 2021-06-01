@@ -324,7 +324,7 @@ def printMenu():
     x, solution = gridFill(puzzle)
     printBoard(solution)
 
-    solFileName = fileName.split(".")[0] + ".src.txt"
+    solFileName = fileName.split(".")[0] + ".sln.txt"
 
     solFile = open(solFileName, "w")
     for i in range(len(solution)):
