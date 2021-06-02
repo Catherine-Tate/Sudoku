@@ -1,7 +1,7 @@
 #sudoku game
 import numpy as np
 import random
-from time import sleep
+import os
 
 #written by Catherine Tate in python 3
 
@@ -291,13 +291,7 @@ def makeBoard():
     printBoard(board)
     return(board, solution)
 
-def printMenu():
-    print("\t\t" + "="*24)
-    print("\t\t   Welcome to SUDOKU")
-    print("\t\t" + "="*24)
-    #print("\n[Preparing Board]")
-    #board, solution = makeBoard()
-
+def solveBoard():
     fileName = input("Please enter filename of puzzle: ")
 
     try:
@@ -319,6 +313,9 @@ def printMenu():
             else:
                 row.append(int(line[j]))
         puzzle.append(row)
+
+    puzzleFile.close()
+
     printBoard(puzzle)
 
     x, solution = gridFill(puzzle)
@@ -331,5 +328,52 @@ def printMenu():
         for j in range(len(solution[i])):
             solFile.write(str(solution[i][j]))
         solFile.write("\n")
+    solFile.close()
+
+def genBoard():
+    print("Generating Puzzle.....")
+    #get number of existing puzzle files in the folder
+    puzCount = 1
+    for file in os.listdir("."):
+        if "puzzle"in file:
+            if ".sln.txt" not in file:
+                puzCount+=1
+    puzName = "puzzle" + str(puzCount) + ".txt"
+
+    board = makeBoard()[0]
+    printBoard(board)
+
+    puzFile = open(puzName, "w")
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if(board[i][j] == 0):
+                puzFile.write("X")
+            else:
+                puzFile.write(str(board[i][j]))
+        puzFile.write("\n")
+    puzFile.close()
+
+def printMenu():
+    print("\t\t" + "="*24)
+    print("\t\t   Welcome to SUDOKU")
+    print("\t\t" + "="*24)
+    #print("\n[Preparing Board]")
+    #board, solution = makeBoard()
+
+    print("Menu:")
+    print("0. Generate Puzzle")
+    print("1. Solve Puzzle")
+    choice = input("\nGenerate Puzzle or Solve Puzzle? ")[0]
+
+    while(choice != "0" and choice != "1"):
+        print("Invalid option")
+        choice = input("\nGenerate Puzzle or Solve Puzzle? ")[0]
+
+    if(choice == "0"):
+        genBoard()
+        return
+    elif(choice == "1"):
+        solveBoard()
+        return
 
 printMenu()
