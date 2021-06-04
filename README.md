@@ -1,7 +1,7 @@
 # Sudoku
 A Sudoku game made in python 3
 
-I used https://dlbeer.co.nz/articles/sudoku.html to help me work through the process of generating the board, but that turned out not to be in the scope of the project. I still included board generation anyway because I already had it written.
+I used https://dlbeer.co.nz/articles/sudoku.html to help me work through the process of generating the board, but that turned out not to be in the scope of the project. I still included board generation anyway because I already had it written. The process for board generation was pretty much the same as the process for board solving anyway. 
 
 to run: 
     cd to the folder containing "sudoku.py"
