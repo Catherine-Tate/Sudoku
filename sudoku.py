@@ -341,7 +341,7 @@ def genBoard():
     puzName = "puzzle" + str(puzCount) + ".txt"
 
     board = makeBoard()[0]
-    printBoard(board)
+    #printBoard(board)
 
     puzFile = open(puzName, "w")
     for i in range(len(board)):
