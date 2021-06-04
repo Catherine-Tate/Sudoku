@@ -363,7 +363,7 @@ def printMenu():
     print("Menu:")
     print("0. Generate Puzzle")
     print("1. Solve Puzzle")
-    choice = input("\nGenerate Puzzle or Solve Puzzle? ")[0]
+    choice = ""
 
     while(choice != "0" and choice != "1"):
         print("Invalid option")
