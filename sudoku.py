@@ -130,7 +130,7 @@ def gridFill(board):
         board[i][j] = 0
     return(False, board)
 
-
+#create a set of valid numbers for each space on the puzzle
 def makeNotes(board):
     #start with each number being possible for each square
     notes = []
@@ -174,6 +174,8 @@ def lCol(board):
 #fill in the last box based on the first 6 numbers in each filled row
 def boxThree(board):
     base = {1, 2, 3, 4, 5, 6, 7, 8, 9}
+    # each row in box 3 will have 3 possible numbers to choose from
+    # based on the 6 numbers in the filled spaces in that row
     R1N = base - set(board[0][:6])
     R2N = base - set(board[1][:6])
     R3N = base - set(board[2][:6])
@@ -182,10 +184,12 @@ def boxThree(board):
     R2N = list(R2N)
     R3N = list(R3N)
 
+    #put the possible numbers in a random order
     random.shuffle(R1N)
     random.shuffle(R2N)
     random.shuffle(R3N)
 
+    #add them to the board
     for i in range(0, 3):
         board[0][6+i] = R1N[i]
         board[1][6+i] = R2N[i]
@@ -194,7 +198,7 @@ def boxThree(board):
     return(board)
 
 def boxTwo(board, seed):
-    #fill in the first column of the second box
+    #fill in the first column of the second box with the 6 numbers not in the first row
     random.shuffle(seed)
     for i in range(0, 3):
         board[0][3+i] = seed[i]
@@ -209,6 +213,7 @@ def boxTwo(board, seed):
         random.shuffle(R2I)
         R2N = R2I[:3]
         R3N = R3I - set(R2N)
+        #make sure both rows have enough numbers
         if(len(R3N) == 3):
             R3N = list(R3N)
             break
@@ -236,10 +241,7 @@ def boxOne(seed):
             x+=1
     return(board)
 
-#takes a partially filled board w/ blank spaces and
-def solveBoard(board):
-    return
-
+#print out a board. Blank spaces (0 in the array) are represented by spaces (" ") on the board
 def printBoard(board):
     print("\t [ 1 | 2 | 3 ][ 4 | 5 | 6 ][ 7 | 8 | 9 ]")
     for i in range(0, 9):
@@ -260,6 +262,7 @@ def printBoard(board):
     print("\t " + "-"*39)
 
 
+#when generating a board, we can fill in tghe first three boxes and the first column fairly easily using a non-recursive method
 def makeBoard():
     #seed value
     seed = random.sample(range(1, 10), 9)
@@ -275,8 +278,10 @@ def makeBoard():
     #fill in the third box
     board = boxThree(board)
 
+    #fill in the first column
     board = lCol(board)
 
+    #fill in the rest of the grid recursively
     notes = makeNotes(board)
     filled, board = gridFill(board)
 
@@ -303,27 +308,35 @@ def solveBoard():
     puzzle = []
     lines = puzzleFile.readlines()
     #print(lines)
+    #read in the puzzle from the file line by line
     for i in range(len(lines)):
+        #strip newlines from each line
         line = lines[i].strip("\n")
         row = []
         #print(line)
+        #put each number/blank space from the row into an array
         for j in range(len(line)):
             if(line[j] == "X"):
                 row.append(0)
             else:
                 row.append(int(line[j]))
+        #put that row array in the full puzzle
         puzzle.append(row)
 
     puzzleFile.close()
 
+    #print out the unsolved puzzle
     printBoard(puzzle)
 
+    #solve the puzzle and print the solution
     x, solution = gridFill(puzzle)
     printBoard(solution)
 
+    #create a file to write the solutuon to
     solFileName = fileName.split(".")[0] + ".sln.txt"
 
     solFile = open(solFileName, "w")
+    #write the solution to the file character by character
     for i in range(len(solution)):
         for j in range(len(solution[i])):
             solFile.write(str(solution[i][j]))
